@@ -1,0 +1,2067 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет - Bothost</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <link rel="stylesheet" href="assets/css/fallback-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="assets/js/main.js"></script>
+    <style>
+        .dashboard-container {
+            min-height: 100vh;
+            background: var(--bg-secondary);
+        }
+        
+        .dashboard-header {
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+        
+        .dashboard-nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dashboard-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .dashboard-logo i {
+            font-size: 2rem;
+        }
+        
+        .user-plan-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-right: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+        
+        .user-info {
+            text-align: right;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+        
+        .user-name:hover {
+            background: #e5e7eb;
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .user-name i {
+            font-size: 0.75rem;
+            color: var(--primary-color);
+        }
+        
+        .user-name::before {
+            content: '\f007';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-right: 0.25rem;
+        }
+        
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        
+        .user-dropdown.active {
+            display: block;
+        }
+        
+        .user-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: background 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 0.9375rem;
+            cursor: pointer;
+        }
+        
+        .user-dropdown-item:hover {
+            background: var(--bg-secondary);
+        }
+        
+        .user-dropdown-item i {
+            width: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .user-dropdown-item.logout {
+            color: #dc2626;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .user-dropdown-item.logout:hover {
+            background: #fef2f2;
+        }
+        
+        .user-dropdown-item.logout i {
+            color: #dc2626;
+        }
+        
+        
+        .telegram-link-btn {
+            padding: 0.5rem;
+            background: #0088cc;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+        
+        .telegram-link-btn:hover {
+            background: #006699;
+            transform: translateY(-2px);
+        }
+        
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .dashboard-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 20px;
+        }
+        
+        .welcome-section {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .welcome-title {
+            font-size: 1.75rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .welcome-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .quick-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .stat-icon.bots { background: var(--gradient-primary); }
+        .stat-icon.running { background: var(--gradient-secondary); }
+        .stat-icon.messages { background: var(--gradient-accent); }
+        .stat-icon.users { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .bots-section {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+        
+        .add-bot-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .add-bot-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        
+        .bots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .bot-card {
+            border: 2px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .bot-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .bot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .bot-info h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .bot-platform {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .bot-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .bot-status.running {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .bot-status.stopped {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .bot-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .bot-stat {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 0.5rem;
+        }
+        
+        .bot-stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .bot-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        
+        .bot-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .bot-action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .bot-action-btn.start {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .bot-action-btn.stop {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .bot-action-btn.restart {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .bot-action-btn.update {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .bot-action-btn.delete {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        
+        .bot-action-btn.logs {
+            background: #f0f9ff;
+            color: #0369a1;
+        }
+        
+        .bot-action-btn.terminal {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+        
+        .bot-action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .bot-domain a {
+            transition: color 0.3s ease;
+        }
+        
+        .bot-domain a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .logs-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .logs-modal-content {
+            background: white;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .logs-modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logs-modal-header h3 {
+            margin: 0;
+            color: var(--text-primary);
+        }
+        
+        .logs-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logs-modal-tabs {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-secondary, #f9fafb);
+        }
+        
+        .log-tab {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background: transparent;
+            color: var(--text-secondary, #6b7280);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+        
+        .log-tab:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent, #6366f1);
+        }
+        
+        .log-tab.active {
+            background: var(--accent, #6366f1);
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+        }
+        
+        .logs-modal-body {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logs-content {
+            flex: 1;
+            padding: 1rem;
+            margin: 0;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .logs-modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+        
+        .logs-refresh-btn, .logs-close-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logs-refresh-btn {
+            background: var(--accent, #6366f1);
+            color: #ffffff;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.25);
+            font-weight: 600;
+        }
+        
+        .logs-close-btn {
+            background: var(--bg-secondary, #f3f4f6);
+            color: var(--text-primary, #111827);
+            border: 1px solid var(--border-color, #d1d5db);
+        }
+        
+        .logs-refresh-btn:hover, .logs-close-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .empty-state h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .beta-note {
+            margin: 1.5rem auto 2rem;
+            max-width: 1200px;
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            color: #92400e;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .beta-note a { color: #7c2d12; font-weight: 700; text-decoration: underline; }
+        
+        /* Модальное окно подписки */
+        .subscription-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        .subscription-modal.active {
+            display: flex;
+        }
+        .subscription-modal-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .subscription-modal h2 {
+            margin-top: 0;
+            color: #111827;
+        }
+        .subscription-modal p {
+            color: #6b7280;
+            margin: 1rem 0;
+        }
+        .telegram-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            font-size: 1rem;
+        }
+        .telegram-input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-nav {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .user-info {
+                text-align: center;
+            }
+            
+            .quick-actions {
+                justify-content: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .bots-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/fontawesome/all.min.css">
+</head>
+<body>
+    <!-- Announcement Banner -->
+    <div class="announcement-banner" id="announcementBanner">
+        <div class="announcement-content">
+            <div class="announcement-icon">
+                <i class="fab fa-telegram"></i>
+            </div>
+            <div class="announcement-text">
+                <strong>Вопросы развертки (деплоя) ботов обсуждаются в <a href="https://t.me/bothost_ru" target="_blank" style="color: #ffffff; text-decoration: underline; font-weight: 700;">Telegram</a></strong>
+            </div>
+            <button class="announcement-close" onclick="closeAnnouncement()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <nav class="dashboard-nav">
+                <div class="dashboard-logo">
+                    <i class="fas fa-robot"></i>
+                    <span>Bothost</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="user-plan-info">
+                        <div style="font-size: 0.875rem; color: var(--text-secondary); text-align: right;">
+                            Тариф: <span style="color: ; font-weight: 600;">Бесплатный</span>
+                                                                                </div>
+                    </div>
+                    <div class="user-menu">
+                        <div class="user-info" onclick="toggleUserDropdown(event)">
+                            <div class="user-name">
+                                prtuuweuhndsnjdfilshgdfb223211                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="user-dropdown" id="userDropdown">
+                            <a href="profile.php" class="user-dropdown-item">
+                                <i class="fas fa-user-circle"></i>
+                                Профиль
+                            </a>
+                                                            <a href="pricing.php" class="user-dropdown-item" style="color: #10b981; font-weight: 600;">
+                                    <i class="fas fa-star"></i>
+                                    Купить подписку
+                                </a>
+                                                        <a href="partners.php" class="user-dropdown-item">
+                                <i class="fas fa-handshake"></i>
+                                Партнерская программа
+                            </a>
+                            <a href="check-payment.php" class="user-dropdown-item">
+                                <i class="fas fa-credit-card"></i>
+                                Проверить платеж
+                            </a>
+                            <a href="telegram-link.php" class="user-dropdown-item">
+                                <i class="fab fa-telegram"></i>
+                                Привязка Telegram
+                            </a>
+                            <a href="logout.php" class="user-dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Выйти
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </nav>
+        </header>
+        
+        <!-- Admin View Banner -->
+                
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                                <h1 class="welcome-title">Добро пожаловать, prtuuweuhndsnjdfilshgdfb223211!</h1>
+                <p class="welcome-subtitle">Управляйте вашими ботами и отслеживайте статистику</p>
+                
+                <!-- Информация о бета-тестировании -->
+                <div style="background: #fef3c7; border: 1px solid #fde68a; color: #92400e; padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 1.5rem;">
+                    <h3 style="margin: 0 0 1rem 0; color: #78350f; display: flex; align-items: center; gap: 0.5rem; font-size: 1.125rem;">
+                        <i class="fas fa-flask"></i>
+                        Проект на бета-тестировании
+                    </h3>
+                    <p style="margin: 0 0 1rem 0; line-height: 1.6; font-size: 0.9375rem;">
+                        Если бот не запустился — напишите в нашу <a href="https://t.me/bothost_ru" target="_blank" style="color: #78350f; font-weight: 600; text-decoration: underline;">Telegram-группу</a>, мы постараемся помочь с запуском бота. 
+                        Также можете обратиться в поддержку по email <a href="mailto:support@bothost.ru" style="color: #78350f; font-weight: 600; text-decoration: underline;">support@bothost.ru</a> — постараемся рассмотреть каждый случай.
+                    </p>
+                    <p style="margin: 0; padding-top: 1rem; border-top: 1px solid #fde68a; line-height: 1.6; font-size: 0.9375rem;">
+                        <strong>💡 Хотите поддержать проект?</strong> Вы можете перейти на платный тариф.
+                    </p>
+                </div>
+                
+                <div class="quick-actions">
+                    <a href="create-bot.php" class="quick-btn">
+                        <i class="fas fa-plus"></i>
+                        Создать бота
+                    </a>
+                    <a href="create-n8n.php" class="quick-btn" style="background: linear-gradient(135deg, #FF6D5A 0%, #FF8C69 100%);">
+                        <i class="fas fa-project-diagram"></i>
+                        n8n
+                    </a>
+                    <a href="#" class="quick-btn" onclick="alert('LLM API в разработке!'); return false;" title="В разработке" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); opacity: 0.6; cursor: not-allowed;">
+                        <i class="fas fa-brain"></i>
+                        LLM API
+                    </a>
+                                        <a href="pricing.php" class="quick-btn" title="Доступно на платных тарифах">
+                        <i class="fas fa-lock"></i>
+                        Git репозитории
+                    </a>
+                                        <a href="tickets.php" class="quick-btn">
+                        <i class="fas fa-ticket-alt"></i>
+                        Тикеты поддержки
+                    </a>
+                    <a href="pricing.php" class="quick-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <i class="fas fa-star"></i>
+                        Тарифы
+                    </a>
+                </div>
+            </section>
+            
+            <!-- Statistics -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon bots">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">1</div>
+                    <div class="stat-label">Всего ботов</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon running">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">1</div>
+                    <div class="stat-label">Работающих</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon messages">
+                            <i class="fas fa-comment"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Сообщений</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon users">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Пользователей</div>
+                </div>
+            </section>
+            
+                        <div class="beta-note" style="background: #dcfce7; border-color: #86efac; color: #166534;">
+                💎 <strong>Улучшите свой тариф!</strong> На бесплатном только 1 бот. Перейдите на <a href="pricing.php" style="color: #065f46; font-weight: 700; text-decoration: underline;">Базовый (99₽/мес, 5 ботов)</a> или <a href="pricing.php" style="color: #065f46; font-weight: 700; text-decoration: underline;">Pro (250₽/мес, 20 ботов)</a>
+            </div>
+                        
+            
+            
+                        
+                        
+            
+
+            <!-- n8n Workflows Section -->
+            
+            <!-- Bots Section -->
+            <section class="bots-section">
+                <div class="section-header">
+                    <h2 class="section-title">Мои боты</h2>
+                    <a href="create-bot.php" class="add-bot-btn">
+                        <i class="fas fa-plus"></i>
+                        Добавить бота
+                    </a>
+                </div>
+                
+                                    <div class="bots-grid">
+                                                    <div class="bot-card">
+                                <div class="bot-header">
+                                    <div class="bot-info">
+                                        <h3>python</h3>
+                                        <div class="bot-id" style="font-size: 0.7rem; color: #6b7280; margin-top: 0.25rem; font-family: monospace; display: flex; align-items: center; gap: 0.25rem;">
+                                            <i class="fas fa-hashtag" style="font-size: 0.65rem;"></i>
+                                            <span id="bot-id-text-bot_1771036049_2988_prtuuweuhndsnjdfilsh">bot_1771036049_2988_prtuuweuhndsnjdfilsh</span>
+                                            <button onclick="copyBotId('bot_1771036049_2988_prtuuweuhndsnjdfilsh')" style="background: none; border: none; color: #6b7280; cursor: pointer; padding: 0.125rem 0.25rem; opacity: 0.7; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'" title="Копировать ID">
+                                                <i class="fas fa-copy" style="font-size: 0.65rem;"></i>
+                                            </button>
+                                        </div>
+                                        <div class="bot-platform">
+                                                                                        <i class="fab fa-telegram" style="color: #0088cc;"></i>
+                                            Telegram                                        </div>
+                                                                                <div class="bot-language" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+                                            <i class="fab fa-python" style="color: #3776ab; font-size: 0.875rem;"></i>
+                                            <span style="font-weight: 500; color: #3776ab;">Python</span>
+                                        </div>
+                                                                                                                        <div class="bot-git" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                                            <i class="fab fa-git-alt"></i>
+                                            https://github.com/khoroshilovm2014-svg/mybot12345678.git                                                                                    </div>
+                                                                                                                                                                                                        <div class="bot-node" style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem; display: flex; align-items: center; gap: 0.375rem;">
+                                            <i class="fas fa-server" style="color: #6b7280; font-size: 0.875rem;"></i>
+                                            <span style="font-weight: 500;">Нода: <span style="color: var(--accent);">НЛ2 (nl2)</span></span>
+                                        </div>
+                                                                                                                        <div class="bot-location" style="font-size: 0.75rem; color: #6b7280; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                            <i class="fas fa-map-marker-alt" style="color: #3b82f6;"></i>
+                                            <span>🇷🇺 Россия</span>
+                                        </div>
+                                    </div>
+                                    <span class="bot-status running">
+                                        Работает                                    </span>
+                                </div>
+                                
+                                <div class="bot-stats" data-bot-id="bot_1771036049_2988_prtuuweuhndsnjdfilsh" data-bot-status="running">
+                                    <div class="bot-stat">
+                                        <div class="bot-stat-value" id="cpu-bot_1771036049_2988_prtuuweuhndsnjdfilsh">—</div>
+                                        <div class="bot-stat-label">CPU</div>
+                                    </div>
+                                    <div class="bot-stat">
+                                        <div class="bot-stat-value" id="memory-bot_1771036049_2988_prtuuweuhndsnjdfilsh">—</div>
+                                        <div class="bot-stat-label">Память</div>
+                                    </div>
+                                    <div class="bot-stat">
+                                        <div class="bot-stat-value">14.02.2026</div>
+                                        <div class="bot-stat-label">Создан</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bot-actions">
+                                                                            <button class="bot-action-btn stop" onclick="stopBot('bot_1771036049_2988_prtuuweuhndsnjdfilsh')" title="Остановить">
+                                            <i class="fas fa-stop"></i>
+                                        </button>
+                                        <button class="bot-action-btn restart" onclick="restartBot('bot_1771036049_2988_prtuuweuhndsnjdfilsh')" title="Перезапустить">
+                                            <i class="fas fa-redo"></i>
+                                        </button>
+                                                                        <button class="bot-action-btn update" onclick="updateBot('bot_1771036049_2988_prtuuweuhndsnjdfilsh')" title="Обновить из Git">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                    <button class="bot-action-btn logs" onclick="showBotLogs('bot_1771036049_2988_prtuuweuhndsnjdfilsh')" title="Показать логи">
+                                        <i class="fas fa-file-alt"></i>
+                                    </button>
+                                    <button class="bot-action-btn terminal" onclick="openTerminal('bot_1771036049_2988_prtuuweuhndsnjdfilsh')" title="Открыть терминал">
+                                        <i class="fas fa-terminal"></i>
+                                    </button>
+                                    <a href="file-manager.php?bot=bot_1771036049_2988_prtuuweuhndsnjdfilsh" class="bot-action-btn files" title="Файловый менеджер" style="background: #f0f9ff; color: #0369a1;">
+                                        <i class="fas fa-folder-open"></i>
+                                    </a>
+                                    <a href="env-viewer.php?bot=bot_1771036049_2988_prtuuweuhndsnjdfilsh" class="bot-action-btn env" title="Переменные окружения" style="background: #f0fdf4; color: #166534;">
+                                        <i class="fas fa-code"></i>
+                                    </a>
+                                    <button class="bot-action-btn database" onclick="showDatabaseModal('bot_1771036049_2988_prtuuweuhndsnjdfilsh')" title="База данных" style="background: #fef3c7; color: #92400e;">
+                                        <i class="fas fa-database"></i>
+                                    </button>
+                                    <button class="bot-action-btn delete" onclick="deleteBot('bot_1771036049_2988_prtuuweuhndsnjdfilsh')" title="Удалить">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                                            </div>
+                            </section>
+        </main>
+    </div>
+    
+    <script>
+        // Безопасная функция для парсинга JSON ответа
+        async function safeJsonParse(response) {
+            let text = null;
+            
+            // Сначала пытаемся прочитать как текст (универсально)
+            try {
+                text = await response.text();
+            } catch (e) {
+                console.error('Error reading response text:', e);
+                return {
+                    ok: false,
+                    msg: 'Ошибка чтения ответа сервера: ' + e.message,
+                    http_code: response.status
+                };
+            }
+            
+            // Пытаемся парсить как JSON
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json') || (!contentType && text.trim().startsWith('{'))) {
+                try {
+                    const jsonData = JSON.parse(text);
+                    // Если это JSON с ошибкой, возвращаем его как есть (но проверяем разные поля)
+                    if (jsonData.ok === false || jsonData.error || jsonData.msg) {
+                        // Убеждаемся, что msg содержит детали
+                        if (jsonData.error && !jsonData.msg) {
+                            jsonData.msg = jsonData.error;
+                        }
+                        if (jsonData.msg && jsonData.file && jsonData.line) {
+                            jsonData.msg += `\n(Файл: ${jsonData.file}, строка: ${jsonData.line})`;
+                        }
+                        return jsonData;
+                    }
+                    return jsonData;
+                } catch (e) {
+                    // Не валидный JSON, но Content-Type говорит что должен быть
+                    console.error('JSON parse error:', e);
+                    console.error('Response text preview:', text.substring(0, 1000));
+                }
+            }
+            
+            // Если не JSON или парсинг не удался - обрабатываем как текст/HTML
+            console.error('Non-JSON response (HTTP ' + response.status + '):');
+            console.error('Full response text:', text);
+            
+            // Убираем HTML теги для поиска
+            const textWithoutHtml = text.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+                                       .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+                                       .replace(/<[^>]*>/g, ' ')
+                                       .replace(/\s+/g, ' ')
+                                       .trim();
+            
+            let errorMsg = null;
+            
+            // Ищем детальные ошибки в тексте
+            const errorPatterns = [
+                // Docker ошибки
+                /FileNotFoundError[^\n]*(?:docker|No such file)[^\n]*/i,
+                /docker.*not found[^\n]*/i,
+                /No such file or directory[^\n]*docker[^\n]*/i,
+                /Traceback[\s\S]{0,2000}FileNotFoundError[\s\S]{0,500}/i,
+                /docker-compose[^\n]*(?:error|failed|Error)[^\n]*/i,
+                /Failed to execute[^\n]*(?:script|docker)[^\n]*/i,
+                // PHP ошибки
+                /Fatal error[^\n]*(?:Call to undefined|Uncaught)[^\n]*/i,
+                /Call to undefined function[^\n]*/i,
+                /Uncaught (?:Error|Exception)[^\n]*/i,
+                // Общие паттерны
+                /Ошибка[^\n]*(?:docker|Docker|FileNotFound|undefined)[^\n]*/i
+            ];
+            
+            // Сначала ищем по паттернам в исходном тексте
+            for (const pattern of errorPatterns) {
+                const match = text.match(pattern);
+                if (match && match[0]) {
+                    errorMsg = match[0]
+                        .replace(/<[^>]*>/g, '')
+                        .replace(/\s+/g, ' ')
+                        .trim();
+                    if (errorMsg.length > 20) {
+                        break;
+                    }
+                }
+            }
+            
+            // Если не нашли по паттернам, ищем строки с ключевыми словами
+            if (!errorMsg || errorMsg.length < 20) {
+                const lines = text.split(/\n|<br\s*\/?>/i);
+                const relevantLines = [];
+                
+                for (let i = 0; i < lines.length; i++) {
+                    let line = lines[i];
+                    // Убираем HTML теги
+                    line = line.replace(/<[^>]*>/g, '').trim();
+                    
+                    if (line && (
+                        /FileNotFoundError|docker.*not found|No such file|Traceback|docker-compose|Failed to execute|Fatal error|Call to undefined|Uncaught (Error|Exception)/i.test(line)
+                    )) {
+                        relevantLines.push(line);
+                        // Добавляем контекст - несколько строк до и после
+                        if (i > 0 && relevantLines.length < 20) {
+                            const prevLine = lines[i-1].replace(/<[^>]*>/g, '').trim();
+                            if (prevLine && prevLine.length > 0 && !relevantLines.includes(prevLine)) {
+                                relevantLines.unshift(prevLine);
+                            }
+                        }
+                        if (relevantLines.length >= 25) break;
+                    }
+                }
+                
+                if (relevantLines.length > 0) {
+                    errorMsg = relevantLines.join('\n');
+                    if (errorMsg.length > 2000) {
+                        errorMsg = errorMsg.substring(0, 2000) + '\n...';
+                    }
+                }
+            }
+            
+            // Если нашли детальную ошибку, показываем её
+            if (errorMsg && errorMsg.length > 10) {
+                return {
+                    ok: false,
+                    msg: errorMsg,
+                    http_code: response.status
+                };
+            }
+            
+            // Последняя попытка - показать первые 800 символов очищенного текста
+            const preview = textWithoutHtml.substring(0, 800);
+            if (preview.length > 50) {
+                return {
+                    ok: false,
+                    msg: 'Ошибка сервера (HTTP ' + response.status + '):\n' + preview,
+                    http_code: response.status
+                };
+            }
+            
+            // Если ничего не нашли
+            return {
+                ok: false,
+                msg: 'Ошибка сервера (HTTP ' + response.status + ')',
+                http_code: response.status,
+                raw_preview: text.substring(0, 500)
+            };
+        }
+        
+        // Bot management functions
+        async function startBot(botId) {
+            if (confirm('Запустить бота?')) {
+                showNotification('Запускаем бота...', 'info');
+                try {
+                    const response = await fetch('api/bots.php?path=start', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({id: botId})
+                    });
+                    
+                    const result = await safeJsonParse(response);
+                    
+                    if (result.ok) {
+                        showNotification('Бот успешно запущен!', 'success');
+                        location.reload();
+                    } else {
+                        showNotification('Ошибка: ' + (result.msg || 'Неизвестная ошибка'), 'error');
+                    }
+                } catch (error) {
+                    // Пытаемся показать детальную ошибку
+                    const errorMsg = error.message || 'Ошибка соединения';
+                    showNotification('Ошибка соединения: ' + errorMsg, 'error');
+                    console.error('Start bot error:', error);
+                }
+            }
+        }
+        
+        async function stopBot(botId) {
+            if (confirm('Остановить бота?')) {
+                showNotification('Останавливаем бота...', 'info');
+                try {
+                    const response = await fetch('api/bots.php?path=stop', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({id: botId})
+                    });
+                    const result = await safeJsonParse(response);
+                    if (result.ok) {
+                        showNotification('Бот остановлен!', 'success');
+                        location.reload();
+                    } else {
+                        showNotification('Ошибка: ' + (result.msg || 'Неизвестная ошибка'), 'error');
+                    }
+                } catch (error) {
+                    // Пытаемся показать детальную ошибку
+                    const errorMsg = error.message || 'Ошибка соединения';
+                    showNotification('Ошибка соединения: ' + errorMsg, 'error');
+                    console.error('Start bot error:', error);
+                }
+            }
+        }
+        
+        async function restartBot(botId) {
+            if (confirm('Перезапустить бота?')) {
+                showNotification('Перезапускаем бота...', 'info');
+                try {
+                    const response = await fetch('api/bots.php?path=restart', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({id: botId})
+                    });
+                    const result = await safeJsonParse(response);
+                    if (result.ok) {
+                        showNotification('Бот перезапущен!', 'success');
+                        location.reload();
+                    } else {
+                        showNotification('Ошибка: ' + (result.msg || 'Неизвестная ошибка'), 'error');
+                    }
+                } catch (error) {
+                    // Пытаемся показать детальную ошибку
+                    const errorMsg = error.message || 'Ошибка соединения';
+                    showNotification('Ошибка соединения: ' + errorMsg, 'error');
+                    console.error('Start bot error:', error);
+                }
+            }
+        }
+        
+        async function updateBot(botId) {
+            if (confirm('Обновить бота из Git репозитория? Это пересоберет образ и обновит контейнер.')) {
+                showNotification('Обновляем бота из Git...', 'info');
+                try {
+                    // Получаем информацию о боте для получения последнего коммита
+                    const botInfoResponse = await fetch(`api/bots.php?path=status_get&id=${encodeURIComponent(botId)}`, {
+                        credentials: 'same-origin'
+                    }).catch(fetchError => {
+                        console.error('Status fetch error:', fetchError);
+                        throw new Error('Ошибка получения информации о боте: ' + (fetchError.message || 'Не удалось подключиться к серверу'));
+                    });
+                    
+                    if (!botInfoResponse.ok) {
+                        let errorText = '';
+                        try {
+                            const errorData = await botInfoResponse.json();
+                            errorText = errorData.error || errorData.msg || botInfoResponse.statusText;
+                        } catch (e) {
+                            errorText = botInfoResponse.statusText;
+                        }
+                        throw new Error(`HTTP ${botInfoResponse.status}: ${errorText}`);
+                    }
+                    
+                    const botInfo = await botInfoResponse.json();
+                    
+                    // Обновляем бота через PHP прокси
+                    const response = await fetch('api/bot-update.php', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        credentials: 'same-origin',
+                        body: JSON.stringify({
+                            id: botId,
+                            commit_sha: botInfo.bot?.last_commit_sha || '',
+                            commit_message: 'Manual update from dashboard',
+                            author: 'user'
+                        })
+                    }).catch(fetchError => {
+                        // Обрабатываем ошибки сети
+                        console.error('Fetch error:', fetchError);
+                        throw new Error('Ошибка сети: ' + (fetchError.message || 'Не удалось подключиться к серверу'));
+                    });
+                    
+                    if (!response.ok) {
+                        // Пытаемся получить детали ошибки из ответа
+                        let errorText = '';
+                        try {
+                            const errorData = await response.json();
+                            errorText = errorData.msg || errorData.error || errorData.message || response.statusText;
+                        } catch (e) {
+                            errorText = await response.text().catch(() => response.statusText);
+                        }
+                        throw new Error(`HTTP ${response.status}: ${errorText}`);
+                    }
+                    
+                    const result = await safeJsonParse(response);
+                    if (result.ok) {
+                        showNotification('Бот обновляется! Процесс займет несколько минут. Обновите страницу через некоторое время.', 'success');
+                        // Открываем логи сборки для отслеживания прогресса
+                        setTimeout(() => {
+                            showBotLogs(botId);
+                        }, 2000);
+                    } else if (response.status === 429) {
+                        // Ошибка 429 - превышен лимит обновлений для бесплатного тарифа
+                        const errorMsg = result.error || result.msg || 'Ограничение для бесплатного тарифа';
+                        const hint = result.hint || 'Для критических обновлений (исправление ошибок) используйте параметр force=true';
+                        
+                        // Формируем понятное сообщение
+                        const fullMessage = `⚠️ ОГРАНИЧЕНИЕ ДЛЯ БЕСПЛАТНОГО ТАРИФА\n\n${errorMsg}\n\n💡 ${hint}\n\nВыполнить принудительное обновление? (для критических случаев)`;
+                        
+                        if (confirm(fullMessage)) {
+                            // Повторяем запрос с параметром force=true
+                            const forceResponse = await fetch('api/bot-update.php', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                credentials: 'same-origin',
+                                body: JSON.stringify({
+                                    id: botId,
+                                    commit_sha: botInfo.bot?.last_commit_sha || '',
+                                    commit_message: 'Force update: Fix critical error',
+                                    author: 'user',
+                                    force: true
+                                })
+                            });
+                            const forceResult = await safeJsonParse(forceResponse);
+                            if (forceResult.ok) {
+                                showNotification('Принудительное обновление запущено! Процесс займет несколько минут.', 'success');
+                                setTimeout(() => {
+                                    showBotLogs(botId);
+                                }, 2000);
+                            } else {
+                                showNotification('Ошибка принудительного обновления: ' + (forceResult.error || forceResult.msg), 'error');
+                            }
+                        } else {
+                            showNotification(`⚠️ Ограничение для бесплатного тарифа: ${errorMsg}`, 'warning');
+                        }
+                    } else {
+                        // Проверяем, не ошибка ли это лимита обновлений
+                        let errorMsg = result.msg || result.message || result.error || 'Неизвестная ошибка';
+                        if (errorMsg.includes('1 обновление в сутки') || errorMsg.includes('через')) {
+                            errorMsg = '⚠️ ' + errorMsg;
+                        }
+                        showNotification('Ошибка: ' + errorMsg, 'error');
+                    }
+                } catch (error) {
+                    console.error('Update error:', error);
+                    let errorMessage = error.message;
+                    
+                    // Детальная обработка разных типов ошибок
+                    if (errorMessage.includes('Failed to fetch') || errorMessage.includes('NetworkError')) {
+                        errorMessage = 'Ошибка сети: не удалось подключиться к серверу. Проверьте интернет-соединение или попробуйте позже.';
+                    } else if (errorMessage.includes('429') || errorMessage.includes('Too Many Requests')) {
+                        errorMessage = '⚠️ Ограничение для бесплатного тарифа: доступно 1 обновление в 24 часа. Используйте принудительное обновление для критических случаев.';
+                    } else if (errorMessage.includes('401') || errorMessage.includes('Unauthorized')) {
+                        errorMessage = 'Ошибка авторизации: войдите в систему заново.';
+                    } else if (errorMessage.includes('404')) {
+                        errorMessage = 'Бот не найден. Обновите страницу.';
+                    } else if (errorMessage.includes('500')) {
+                        errorMessage = 'Ошибка сервера: попробуйте позже или обратитесь в поддержку.';
+                    }
+                    
+                    showNotification('Ошибка обновления: ' + errorMessage, 'error');
+                }
+            }
+        }
+        
+        async function deleteBot(botId) {
+            if (confirm('Удалить бота? Это действие нельзя отменить.')) {
+                showNotification('Удаляем бота...', 'info');
+                try {
+                    const response = await fetch('api/bots.php?path=delete', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({id: botId})
+                    });
+                    const result = await safeJsonParse(response);
+                    if (result.ok) {
+                        showNotification('Бот удален!', 'success');
+                        location.reload();
+                    } else {
+                        showNotification('Ошибка: ' + (result.msg || 'Неизвестная ошибка'), 'error');
+                    }
+                } catch (error) {
+                    // Пытаемся показать детальную ошибку
+                    const errorMsg = error.message || 'Ошибка соединения';
+                    showNotification('Ошибка соединения: ' + errorMsg, 'error');
+                    console.error('Start bot error:', error);
+                }
+            }
+        }
+        
+        let currentLogMode = 'runtime';
+        
+        async function showBotLogs(botId, mode = 'runtime') {
+            currentLogMode = mode;
+            showNotification('Загружаем логи...', 'info');
+            try {
+                const response = await fetch(`api/bots.php?path=logs&id=${encodeURIComponent(botId)}&mode=${encodeURIComponent(mode)}`, {
+                    credentials: 'same-origin'
+                });
+                
+                if (!response.ok) {
+                    showNotification('Ошибка получения логов: HTTP ' + response.status, 'error');
+                    return;
+                }
+                
+                const result = await safeJsonParse(response);
+                if (result.logs !== undefined) {
+                    openLogsModal(botId, result.logs, mode);
+                } else {
+                    showNotification('Ошибка: ' + (result.error || result.msg || 'Неизвестная ошибка'), 'error');
+                }
+            } catch (error) {
+                console.error('Logs fetch error:', error);
+                showNotification('Ошибка соединения: ' + error.message, 'error');
+            }
+        }
+        
+        function openLogsModal(botId, logs, mode = 'runtime') {
+            currentLogMode = mode;
+            const modal = document.createElement('div');
+            modal.className = 'logs-modal';
+            modal.innerHTML = `
+                <div class="logs-modal-content">
+                    <div class="logs-modal-header">
+                        <h3>Логи бота: ${botId}</h3>
+                        <button class="logs-modal-close" onclick="closeLogsModal()">&times;</button>
+                    </div>
+                    <div class="logs-modal-tabs">
+                        <button class="log-tab ${mode === 'runtime' ? 'active' : ''}" onclick="switchLogMode('${botId}', 'runtime')">
+                            📋 Логи работы
+                        </button>
+                        <button class="log-tab ${mode === 'build' ? 'active' : ''}" onclick="switchLogMode('${botId}', 'build')">
+                            🔨 Логи сборки
+                        </button>
+                    </div>
+                    <div class="logs-modal-body">
+                        <pre class="logs-content">${logs || 'Логи пусты'}</pre>
+                    </div>
+                    <div class="logs-modal-footer">
+                        <button class="logs-refresh-btn" onclick="refreshLogs('${botId}', '${mode}')">🔄 Обновить</button>
+                        <button class="logs-close-btn" onclick="closeLogsModal()">Закрыть</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            // Автообновление только для runtime логов
+            if (mode === 'runtime') {
+                startAutoStream(botId, mode);
+            }
+        }
+        
+        async function switchLogMode(botId, mode) {
+            currentLogMode = mode;
+            // Останавливаем автообновление если было
+            stopAutoStream();
+            
+            // Загружаем логи нового режима
+            showNotification('Переключаем режим логов...', 'info');
+            try {
+                const response = await fetch(`api/bots.php?path=logs&id=${encodeURIComponent(botId)}&mode=${encodeURIComponent(mode)}`, {
+                    credentials: 'same-origin'
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Logs fetch error:', response.status, errorText);
+                    showNotification('Ошибка получения логов: HTTP ' + response.status, 'error');
+                    return;
+                }
+                
+                const result = await safeJsonParse(response);
+                if (result.logs !== undefined) {
+                    const logsContent = document.querySelector('.logs-content');
+                    if (logsContent) {
+                        logsContent.textContent = result.logs || 'Логи пусты';
+                        // Скролл в начало для build логов, в конец для runtime
+                        if (mode === 'build') {
+                            logsContent.scrollTop = 0;
+                        } else {
+                            logsContent.scrollTop = logsContent.scrollHeight;
+                        }
+                    }
+                    // Обновляем активную вкладку правильно
+                    const tabs = document.querySelectorAll('.log-tab');
+                    tabs.forEach(tab => {
+                        tab.classList.remove('active');
+                        if ((mode === 'runtime' && tab.textContent.includes('Логи работы')) ||
+                            (mode === 'build' && tab.textContent.includes('Логи сборки'))) {
+                            tab.classList.add('active');
+                        }
+                    });
+                    // Обновляем кнопку обновления
+                    const refreshBtn = document.querySelector('.logs-refresh-btn');
+                    if (refreshBtn) {
+                        refreshBtn.setAttribute('onclick', `refreshLogs('${botId}', '${mode}')`);
+                    }
+                    // Запускаем автообновление только для runtime
+                    if (mode === 'runtime') {
+                        startAutoStream(botId, mode);
+                    }
+                    showNotification('Режим переключен', 'success');
+                } else {
+                    showNotification('Ошибка: ' + (result.error || result.msg || 'Неизвестная ошибка'), 'error');
+                }
+            } catch (error) {
+                showNotification('Ошибка соединения: ' + (error.message || 'не удалось подключиться к серверу'), 'error');
+                console.error('Connection error:', error);
+            }
+        }
+        
+        function closeLogsModal() {
+            const modal = document.querySelector('.logs-modal');
+            if (modal) {
+                modal.remove();
+            }
+            stopAutoStream();
+        }
+        
+        async function refreshLogs(botId, mode = 'runtime') {
+            try {
+                const response = await fetch(`api/bots.php?path=logs&id=${encodeURIComponent(botId)}&mode=${encodeURIComponent(mode)}` , {
+                    credentials: 'same-origin'
+                });
+                const result = await safeJsonParse(response);
+                if (response.ok && result.logs !== undefined) {
+                    const logsContent = document.querySelector('.logs-content');
+                    if (logsContent) {
+                        const wasScrolledToBottom = logsContent.scrollHeight - logsContent.scrollTop <= logsContent.clientHeight + 10;
+                        logsContent.textContent = result.logs || 'Логи пусты';
+                        // Автоскролл вниз если были внизу (для runtime логов)
+                        if (wasScrolledToBottom && mode === 'runtime') {
+                            logsContent.scrollTop = logsContent.scrollHeight;
+                        }
+                    }
+                } else {
+                    showNotification('Ошибка обновления логов', 'error');
+                }
+            } catch (error) {
+                showNotification('Ошибка соединения: ' + (error.message || 'не удалось подключиться к серверу'), 'error');
+                console.error('Connection error:', error);
+            }
+        }
+
+        let streamTimer = null;
+        let currentStreamMode = 'runtime';
+        async function streamTick(botId) {
+            await refreshLogs(botId, currentStreamMode);
+        }
+        function startAutoStream(botId, mode = 'runtime') {
+            if (streamTimer) { clearInterval(streamTimer); streamTimer = null; }
+            currentStreamMode = mode;
+            // Автообновление только для runtime логов, каждые 2 секунды
+            if (mode === 'runtime') {
+                streamTimer = setInterval(() => streamTick(botId), 2000);
+            }
+        }
+        function stopAutoStream() {
+            if (streamTimer) { clearInterval(streamTimer); streamTimer = null; }
+        }
+        
+        
+        // Уведомления об успешном создании бота
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'bot_created') {
+            showNotification('Бот успешно создан!', 'success');
+        }
+        
+        // Уведомление об активации тарифа
+        if (urlParams.get('plan_activated') === '1') {
+            showNotification('Тариф успешно активирован! 🎉', 'success');
+        }
+        const openLogsId = urlParams.get('open_logs');
+        if (openLogsId) {
+            setTimeout(async () => {
+                try {
+                    const response = await fetch(`api/bots.php?path=logs&id=${encodeURIComponent(openLogsId)}&mode=build`, {credentials:'same-origin'});
+                    const result = await safeJsonParse(response);
+                    if (response.ok) {
+                        openLogsModal(openLogsId, result.logs || '');
+                    }
+                } catch(e) {}
+            }, 600);
+        }
+        
+        function showDeployModal() {
+            window.location.href = 'create-bot.php';
+        }
+        
+        function showSettingsModal() {
+            showNotification('Настройки будут добавлены в следующей версии', 'info');
+        }
+        
+        // Notification system (reused from main.js)
+        function showNotification(message, type = 'info') {
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <span class="notification-message">${message}</span>
+                    <button class="notification-close">&times;</button>
+                </div>
+            `;
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#6366f1'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.5rem;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                z-index: 10000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                max-width: 400px;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 5000);
+            
+            const closeBtn = notification.querySelector('.notification-close');
+            closeBtn.addEventListener('click', () => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            });
+        }
+        
+        function openTerminal(botId) {
+            // Открываем терминал в новом окне с версией для обхода кеша
+            const version = '&v=2.0.1'; // Используем & вместо ? так как bot уже первый параметр
+            const terminalUrl = `terminal.html?bot=${encodeURIComponent(botId)}${version}`;
+            window.open(terminalUrl, '_blank', 'width=1000,height=700,scrollbars=yes,resizable=yes');
+        }
+        
+        // Загрузка ресурсов ботов
+        async function loadBotResources(botId) {
+            const cpuEl = document.getElementById(`cpu-${botId}`);
+            const memoryEl = document.getElementById(`memory-${botId}`);
+            const statsEl = document.querySelector(`.bot-stats[data-bot-id="${botId}"]`);
+            
+            if (!statsEl || !cpuEl || !memoryEl) return;
+            
+            const status = statsEl.getAttribute('data-bot-status');
+            if (status !== 'running') {
+                cpuEl.textContent = '—';
+                memoryEl.textContent = '—';
+                return;
+            }
+            
+            try {
+                const url = `/api/bot-resources.php?id=${encodeURIComponent(botId)}`;
+                console.log(`[Resources] Requesting: ${url}`);
+                
+                const response = await fetch(url, {
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                console.log(`[Resources] Bot ${botId}: HTTP ${response.status}`);
+                
+                if (!response.ok) {
+                    const text = await response.text();
+                    console.error(`[Resources] Bot ${botId}: Response not OK`, text.substring(0, 200));
+                    cpuEl.textContent = '—';
+                    memoryEl.textContent = '—';
+                    return;
+                }
+                
+                // Сначала получаем текст
+                const text = await response.text();
+                console.log(`[Resources] Bot ${botId}: Raw response (${text.length} chars):`, text.substring(0, 500));
+                
+                // Парсим JSON
+                if (!text || text.trim() === '') {
+                    console.error(`[Resources] Bot ${botId}: Empty response!`);
+                    cpuEl.textContent = '—';
+                    memoryEl.textContent = '—';
+                    return;
+                }
+                
+                const result = JSON.parse(text);
+                console.log(`[Resources] Bot ${botId}:`, JSON.stringify(result, null, 2));
+                
+                if (result.ok && result.resources) {
+                    console.log(`[Resources] Bot ${botId}: Has resources!`, result.resources);
+                    const cpu = result.resources.cpu?.percent ?? null;
+                    const memory = result.resources.memory;
+                    
+                    if (cpu !== null) {
+                        cpuEl.textContent = cpu.toFixed(1) + '%';
+                        cpuEl.style.color = cpu > 80 ? '#dc2626' : cpu > 50 ? '#f59e0b' : '#16a34a';
+                    } else {
+                        cpuEl.textContent = '—';
+                    }
+                    
+                    if (memory) {
+                        const memPercent = memory.percent ?? 0;
+                        const memMb = memory.usage_mb ?? 0;
+                        memoryEl.textContent = memMb.toFixed(1) + ' MB';
+                        memoryEl.style.color = memPercent > 80 ? '#dc2626' : memPercent > 50 ? '#f59e0b' : '#16a34a';
+                    } else {
+                        memoryEl.textContent = '—';
+                    }
+                } else {
+                    console.warn(`[Resources] Bot ${botId}: Invalid response format`, result);
+                    cpuEl.textContent = '—';
+                    memoryEl.textContent = '—';
+                }
+            } catch (error) {
+                console.error(`[Resources] Bot ${botId}: Error`, error);
+                cpuEl.textContent = '—';
+                memoryEl.textContent = '—';
+            }
+        }
+        
+        // Загружаем ресурсы для всех ботов при загрузке страницы
+        // ОПТИМИЗАЦИЯ: Загружаем только для запущенных ботов и с задержкой, чтобы не блокировать страницу
+        document.addEventListener('DOMContentLoaded', function() {
+            // Задержка 500ms для первоначальной загрузки страницы
+            setTimeout(() => {
+                const botStats = document.querySelectorAll('.bot-stats[data-bot-status="running"]');
+                // Загружаем по одному с интервалом 200ms, чтобы не перегружать агент
+                botStats.forEach((statsEl, index) => {
+                    setTimeout(() => {
+                        const botId = statsEl.getAttribute('data-bot-id');
+                        if (botId) {
+                            loadBotResources(botId);
+                        }
+                    }, index * 200); // Растягиваем запросы во времени
+                });
+            }, 500);
+            
+            // Обновляем ресурсы каждые 30 секунд (увеличено с 10 до 30 для снижения нагрузки)
+            setInterval(() => {
+                const runningBots = document.querySelectorAll('.bot-stats[data-bot-status="running"]');
+                // Загружаем по одному с интервалом 200ms
+                runningBots.forEach((statsEl, index) => {
+                    setTimeout(() => {
+                        const botId = statsEl.getAttribute('data-bot-id');
+                        if (botId) {
+                            loadBotResources(botId);
+                        }
+                    }, index * 200);
+                });
+            }, 30000); // Увеличено с 10000 до 30000 мс
+        });
+        
+        async function showDatabaseModal(botId) {
+            const agentUrl = 'http://agent.bothost.ru';
+            
+            // Создаем модальное окно
+            const modal = document.createElement('div');
+            modal.id = 'database-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 1rem; padding: 2rem; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="margin: 0; font-size: 1.5rem; color: var(--text-primary);">
+                            <i class="fas fa-database" style="color: #92400e; margin-right: 0.5rem;"></i>
+                            База данных бота
+                        </h2>
+                        <button onclick="document.getElementById('database-modal').remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">&times;</button>
+                    </div>
+                    <div id="database-content" style="min-height: 200px;">
+                        <div style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color);"></i>
+                            <p style="margin-top: 1rem; color: var(--text-secondary);">Загрузка списка файлов...</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Закрытие по клику вне модального окна
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+            
+            try {
+                // Получаем список файлов БД через PHP прокси
+                const response = await fetch(`api/bots.php?path=database_list&id=${encodeURIComponent(botId)}`, {
+                    method: 'GET',
+                    credentials: 'same-origin'
+                });
+                
+                const content = document.getElementById('database-content');
+                
+                // Если агент вернул ответ, пытаемся получить JSON
+                let data = null;
+                if (response.ok) {
+                    try {
+                        data = await response.json();
+                    } catch (e) {
+                        // Если не удалось распарсить JSON, но ответ был успешным
+                        content.innerHTML = `
+                            <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                <i class="fas fa-database" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                                <p>Файлы базы данных не найдены</p>
+                                <p style="font-size: 0.875rem; margin-top: 0.5rem;">Бот еще не создал базу данных</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                } else {
+                    // Если HTTP ошибка, пытаемся получить JSON с сообщением
+                    try {
+                        data = await response.json();
+                    } catch (e) {
+                        // Если не удалось распарсить JSON, показываем общую ошибку
+                        content.innerHTML = `
+                            <div style="background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 1rem; border-radius: 0.5rem;">
+                                <i class="fas fa-exclamation-circle"></i>
+                                Ошибка ${response.status}: ${response.statusText}
+                            </div>
+                        `;
+                        return;
+                    }
+                }
+                
+                // Если агент вернул ошибку в JSON
+                if (data && !data.ok) {
+                    // Если это просто отсутствие файлов, показываем нормальное сообщение
+                    if (data.msg && (data.msg.includes('не найдены') || data.msg.includes('not found') || data.msg.includes('пуст'))) {
+                        content.innerHTML = `
+                            <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                                <i class="fas fa-database" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                                <p>Файлы базы данных не найдены</p>
+                                <p style="font-size: 0.875rem; margin-top: 0.5rem;">Бот еще не создал базу данных</p>
+                            </div>
+                        `;
+                    } else {
+                        content.innerHTML = `
+                            <div style="background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 1rem; border-radius: 0.5rem;">
+                                <i class="fas fa-exclamation-circle"></i>
+                                ${data.msg || 'Ошибка получения списка файлов'}
+                            </div>
+                        `;
+                    }
+                    return;
+                }
+                
+                const files = (data && data.files) || [];
+                
+                if (files.length === 0) {
+                    content.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            <i class="fas fa-database" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                            <p>Файлы базы данных не найдены</p>
+                            <p style="font-size: 0.875rem; margin-top: 0.5rem;">Бот еще не создал базу данных</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Отображаем список файлов
+                let filesHtml = '<div style="display: flex; flex-direction: column; gap: 1rem;">';
+                
+                files.forEach(file => {
+                    const sizeKB = (file.size / 1024).toFixed(2);
+                    filesHtml += `
+                        <div style="border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem;">
+                                    <i class="fas fa-database" style="color: #92400e; margin-right: 0.5rem;"></i>
+                                    ${file.name}
+                                </div>
+                                <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                                    ${sizeKB} KB
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button onclick="downloadDatabase('${botId}', '${file.path.replace(/'/g, "\\'")}')" 
+                                        style="background: var(--primary-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-download"></i>
+                                    Скачать
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                filesHtml += '</div>';
+                content.innerHTML = filesHtml;
+                
+            } catch (error) {
+                const content = document.getElementById('database-content');
+                let errorMessage = '';
+                
+                // Различаем сетевые ошибки и другие ошибки
+                if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError') || error.name === 'TypeError') {
+                    // Агент недоступен - это может быть временно (пересборка)
+                    errorMessage = `
+                        <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            <i class="fas fa-database" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                            <p>Агент временно недоступен</p>
+                            <p style="font-size: 0.875rem; margin-top: 0.5rem;">
+                                Возможно, агент пересобирается или обновляется.<br>
+                                Попробуйте позже.
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    // Для других ошибок показываем простое сообщение
+                    errorMessage = `
+                        <div style="background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 1rem; border-radius: 0.5rem;">
+                            <i class="fas fa-exclamation-circle"></i>
+                            Ошибка: ${error.message}
+                        </div>
+                    `;
+                }
+                
+                content.innerHTML = errorMessage;
+            }
+        }
+        
+        function downloadDatabase(botId, filePath) {
+            // Скачиваем через PHP прокси
+            const url = `api/bots.php?path=database_download&id=${encodeURIComponent(botId)}&file_path=${encodeURIComponent(filePath)}`;
+            
+            // Создаем временную ссылку для скачивания
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filePath.split('/').pop() || 'database.db';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('Начато скачивание базы данных', 'success');
+        }
+        
+        
+    </script>
+    
+    <script>
+        // Управление выпадающим меню пользователя
+        function toggleUserDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('active');
+        }
+        
+        // Закрываем меню при клике вне его
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdown');
+            const userInfo = document.querySelector('.user-info');
+            
+            if (dropdown && !userInfo.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+        
+        // Копирование webhook URL
+        function copyBotId(botId) {
+            const botIdText = document.getElementById('bot-id-text-' + botId);
+            if (botIdText) {
+                const text = botIdText.textContent;
+                navigator.clipboard.writeText(text).then(function() {
+                    // Показываем уведомление
+                    const button = document.querySelector('button[onclick="copyBotId(\'' + botId + '\')"]');
+                    if (button) {
+                        const icon = button.querySelector('i');
+                        if (icon) {
+                            const originalClass = icon.className;
+                            icon.className = 'fas fa-check';
+                            setTimeout(function() {
+                                icon.className = originalClass;
+                            }, 1000);
+                        }
+                    }
+                }).catch(function(err) {
+                    console.error('Ошибка копирования:', err);
+                    // Fallback на старый метод
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    textArea.style.position = 'fixed';
+                    textArea.style.opacity = '0';
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    try {
+                        if (document.execCommand('copy')) {
+                            const button = document.querySelector('button[onclick="copyBotId(\'' + botId + '\')"]');
+                            if (button) {
+                                const icon = button.querySelector('i');
+                                if (icon) {
+                                    const originalClass = icon.className;
+                                    icon.className = 'fas fa-check';
+                                    setTimeout(function() {
+                                        icon.className = originalClass;
+                                    }, 1000);
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        alert('Не удалось скопировать ID бота');
+                    }
+                    document.body.removeChild(textArea);
+                });
+            }
+        }
+        
+        function copyWebhookUrl(botId) {
+            const input = document.getElementById('webhook-url-' + botId);
+            if (!input) return;
+            
+            input.select();
+            input.setSelectionRange(0, 99999); // Для мобильных устройств
+            
+            try {
+                // Используем современный API, если доступен
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(input.value).then(function() {
+                        showWebhookCopySuccess(botId);
+                    }).catch(function() {
+                        // Fallback на старый метод
+                        if (document.execCommand('copy')) {
+                            showWebhookCopySuccess(botId);
+                        } else {
+                            alert('Не удалось скопировать. Скопируйте ссылку вручную.');
+                        }
+                    });
+                } else {
+                    // Fallback на старый метод
+                    if (document.execCommand('copy')) {
+                        showWebhookCopySuccess(botId);
+                    } else {
+                        alert('Не удалось скопировать. Скопируйте ссылку вручную.');
+                    }
+                }
+            } catch (err) {
+                alert('Не удалось скопировать. Скопируйте ссылку вручную.');
+            }
+        }
+        
+        function showWebhookCopySuccess(botId) {
+            const button = event.target.closest('button');
+            if (button) {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Скопировано!';
+                button.style.background = '#10b981';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = '';
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
