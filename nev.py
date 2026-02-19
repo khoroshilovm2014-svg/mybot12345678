@@ -26,7 +26,7 @@ print("Python version:", sys.version)
 print("=" * 50)
 
 # --- КОНФИГУРАЦИЯ ---
-DATA_FILE = "data.json"
+DATA_FILE = "data.db"
 SUPER_ADMIN_IDS = [7635015201] 
 TOKEN = "8363126247:AAF7fbawYxeL7-LsI2Kk0BKFNLfdND32Lr0"
 
@@ -1384,4 +1384,5 @@ if __name__ == "__main__":
         # Сохраняем данные перед выходом
         save_data()
         print("💾 Данные сохранены")
+
 
