@@ -33,7 +33,7 @@ print("=" * 50)
 # --- КОНФИГУРАЦИЯ ---
 DB_FILE = "bot_database.db"
 SUPER_ADMIN_IDS = [7635015201]
-TOKEN = "8028070704:AAGJpvXU5DHV7EOzCgrFaogHdJuioEP4MWA"
+TOKEN = "8363126247:AAF7fbawYxeL7-LsI2Kk0BKFNLfdND32Lr0"
 
 # ПРАВА ДОСТУПА
 PERM_BAN = 'ban_users'
@@ -2840,4 +2840,5 @@ if __name__ == "__main__":
         print(f"\n❌ Критическая ошибка: {e}")
         import traceback
         traceback.print_exc()
+
 
